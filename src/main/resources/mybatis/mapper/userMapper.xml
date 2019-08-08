@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shukai.ebook.dao.UserDao">
+    <insert id="addUser" parameterType="com.shukai.ebook.bean.User">
+        insert into users(account,password,name,mail) values (#{account},#{password},#{name},#{mail})
+    </insert>
+    <insert id="addUserRole" parameterType="com.shukai.ebook.bean.User">
+        insert into user_role values(#{account},'2')
+    </insert>
+
+    <resultMap id="getUserByAccount" type="com.shukai.ebook.bean.User">
+        <id property="account" column="account"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="mail" column="mail"/>
+        <result property="allowed" column="allowed"/>
+        <result property="isManager" column="isManager"/>
+    </resultMap>
+    <select id="getUserByAccount" parameterType="string" resultMap="getUserByAccount">
+        select * from users where account = #{account}
+    </select>
+
+    <resultMap id="getUserByMail" type="com.shukai.ebook.bean.User">
+        <id property="account" column="account"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="mail" column="mail"/>
+        <result property="allowed" column="allowed"/>
+        <result property="isManager" column="isManager"/>
+    </resultMap>
+    <select id="getUserByMail" parameterType="string" resultMap="getUserByMail">
+        select * from users where mail = #{mail}
+    </select>
+
+
+    <resultMap id="getAllUser" type="com.shukai.ebook.bean.User">
+        <id property="account" column="account"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="mail" column="mail"/>
+        <result property="allowed" column="allowed"/>
+        <result property="isManager" column="isManager"/>
+    </resultMap>
+    <select id="getAllUser" resultMap="getAllUser">
+        select * from users;
+    </select>
+
+    <update id="changeAllowed" parameterType="string">
+        update users set allowed=ABS(allowed-1) where account=#{account}
+    </update>
+
+    <resultMap id="getPermissionByName" type="com.shukai.ebook.bean.Permission">
+        <id property="perm_id" column="perm_id"/>
+        <result property="perm_name" column="perm_name"/>
+        <result property="perm_tag" column="perm_tag"/>
+    </resultMap>
+    <select id="getPermissionByName" parameterType="string" resultMap="getPermissionByName">
+        select perm.* from users
+        inner join user_role on users.account=user_role.account
+        inner join role_perm on user_role.role_id=role_perm.role_id
+        inner join permission perm on role_perm.perm_id=perm.perm_id
+        where users.account=#{account}
+    </select>
+</mapper>

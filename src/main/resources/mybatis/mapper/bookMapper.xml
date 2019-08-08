@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shukai.ebook.dao.BookDao">
+    <resultMap id="getBookByISBN" type="com.shukai.ebook.bean.Book">
+        <id property="ISBN" column="ISBN"/>
+        <result property="name" column="name"/>
+        <result property="author" column="author"/>
+        <result property="outline" column="outline"/>
+        <result property="pages" column="pages"/>
+        <result property="press" column="press"/>
+        <result property="price" column="price"/>
+        <result property="stock" column="stock"/>
+        <result property="year" column="year"/>
+        <result property="cover" column="cover"/>
+    </resultMap>
+    <select id="getBookByISBN" parameterType="string" resultMap="getBookByISBN">
+        select * from books where ISBN=#{ISBN}
+    </select>
+
+    <resultMap id="getBooks" type="com.shukai.ebook.bean.Book">
+        <id property="ISBN" column="ISBN"/>
+        <result property="name" column="name"/>
+        <result property="author" column="author"/>
+        <result property="outline" column="outline"/>
+        <result property="pages" column="pages"/>
+        <result property="press" column="press"/>
+        <result property="price" column="price"/>
+        <result property="stock" column="stock"/>
+        <result property="year" column="year"/>
+        <result property="cover" column="cover"/>
+    </resultMap>
+    <select id="getBooks" resultMap="getBooks">
+        select * from books
+    </select>
+
+    <resultMap id="searchBook" type="com.shukai.ebook.bean.Book">
+        <id property="ISBN" column="ISBN"/>
+        <result property="name" column="name"/>
+        <result property="author" column="author"/>
+        <result property="outline" column="outline"/>
+        <result property="pages" column="pages"/>
+        <result property="press" column="press"/>
+        <result property="price" column="price"/>
+        <result property="stock" column="stock"/>
+        <result property="year" column="year"/>
+        <result property="cover" column="cover"/>
+    </resultMap>
+    <select id="searchBook" parameterType="string" resultMap="searchBook">
+        select * from books where name like concat(concat("%",#{name}),"%") or author like concat(concat("%",#{name}),"%")
+    </select>
+
+    <delete id="deleteBook" parameterType="string">
+        delete from books where ISBN=#{ISBN}
+    </delete>
+
+    <insert id="addBook" parameterType="com.shukai.ebook.bean.Book">
+        insert into books values
+        (#{name},#{author},#{ISBN},#{outline},#{stock},#{price},#{cover},#{press},#{year},#{pages})
+    </insert>
+
+    <update id="modifyBook" parameterType="com.shukai.ebook.bean.Book">
+        update books set name=#{name},author=#{author},outline=#{outline},stock=#{stock},price=#{price},
+        cover=#{cover},press=#{press},year=#{year},pages=#{pages} where ISBN=#{ISBN}
+    </update>
+
+    <update id="decreaseStock" parameterType="com.shukai.ebook.DTO.StockDTO">
+        update books set stock=#{quantity} where ISBN=#{ISBN}
+    </update>
+
+    <update id="increaseStock" parameterType="com.shukai.ebook.DTO.StockDTO">
+        update books set stock=#{quantity} where ISBN=#{ISBN}
+    </update>
+</mapper>

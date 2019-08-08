@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shukai.ebook.dao.OrderDao">
+    <resultMap id="findAllOrder"  type="com.shukai.ebook.bean.Order_Master">
+        <id property="order_id" column="order_id"/>
+        <result property="create_time" column="create_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="buyer_name" column="buyer_name"/>
+        <result property="buyer_account" column="buyer_account"/>
+        <result property="order_amount" column="order_amount"/>
+        <result property="order_status" column="order_status"/>
+        <result property="pay_status" column="pay_status"/>
+        <collection property="orderDetailList" ofType="com.shukai.ebook.bean.Order_Detail">
+            <id property="detail_id" column="detail_id"/>
+            <result property="update_time" column="update_time"/>
+            <result property="create_time" column="create_time"/>
+            <result property="order_id" column="order_id"/>
+            <result property="book_price" column="book_price"/>
+            <result property="book_author" column="book_author"/>
+            <result property="book_name" column="book_name"/>
+            <result property="book_icon" column="book_icon"/>
+            <result property="ISBN" column="ISBN"/>
+            <result property="book_quantity" column="book_quantity"/>
+        </collection>
+    </resultMap>
+    <select id="findAllOrder" parameterType="string" resultMap="findAllOrder">
+        select master.*,detail.* from order_master master,order_detail detail where master.order_id=detail.order_id and master.buyer_account=#{buyer_account}
+    </select>
+
+    <resultMap id="findAllUserOrder"  type="com.shukai.ebook.bean.Order_Master">
+        <id property="order_id" column="order_id"/>
+        <result property="create_time" column="create_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="buyer_name" column="buyer_name"/>
+        <result property="buyer_account" column="buyer_account"/>
+        <result property="order_amount" column="order_amount"/>
+        <result property="order_status" column="order_status"/>
+        <result property="pay_status" column="pay_status"/>
+        <collection property="orderDetailList" ofType="com.shukai.ebook.bean.Order_Detail">
+            <id property="detail_id" column="detail_id"/>
+            <result property="update_time" column="update_time"/>
+            <result property="create_time" column="create_time"/>
+            <result property="order_id" column="order_id"/>
+            <result property="book_price" column="book_price"/>
+            <result property="book_author" column="book_author"/>
+            <result property="book_name" column="book_name"/>
+            <result property="book_icon" column="book_icon"/>
+            <result property="ISBN" column="ISBN"/>
+            <result property="book_quantity" column="book_quantity"/>
+        </collection>
+    </resultMap>
+    <select id="findAllUserOrder" parameterType="string" resultMap="findAllUserOrder">
+        select master.*,detail.* from order_master master inner join order_detail detail on master.order_id=detail.order_id
+    </select>
+
+    <resultMap id="findOneOrder" type="com.shukai.ebook.bean.Order_Master">
+        <id property="order_id" column="order_id"/>
+        <result property="create_time" column="create_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="buyer_name" column="buyer_name"/>
+        <result property="buyer_account" column="buyer_account"/>
+        <result property="order_amount" column="order_amount"/>
+        <result property="order_status" column="order_status"/>
+        <result property="pay_status" column="pay_status"/>
+        <collection property="orderDetailList" ofType="com.shukai.ebook.bean.Order_Detail">
+            <id property="detail_id" column="detail_id"/>
+            <result property="update_time" column="update_time"/>
+            <result property="create_time" column="create_time"/>
+            <result property="order_id" column="order_id"/>
+            <result property="book_price" column="book_price"/>
+            <result property="book_name" column="book_name"/>
+            <result property="book_icon" column="book_icon"/>
+            <result property="ISBN" column="ISBN"/>
+            <result property="book_quantity" column="product_quantity"/>
+        </collection>
+    </resultMap>
+    <select id="findOneOrder" parameterType="string" resultMap="findOneOrder">
+        select master.*,detail.* from order_master master,order_detail detail where master.order_id=detail.order_id and master.order_id=#{order_id}
+    </select>
+
+    <resultMap id="searchOrder" type="com.shukai.ebook.bean.Order_Master">
+        <id property="order_id" column="order_id"/>
+        <result property="create_time" column="create_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="buyer_name" column="buyer_name"/>
+        <result property="buyer_account" column="buyer_account"/>
+        <result property="order_amount" column="order_amount"/>
+        <result property="order_status" column="order_status"/>
+        <result property="pay_status" column="pay_status"/>
+        <collection property="orderDetailList" ofType="com.shukai.ebook.bean.Order_Detail">
+            <id property="detail_id" column="detail_id"/>
+            <result property="update_time" column="update_time"/>
+            <result property="create_time" column="create_time"/>
+            <result property="order_id" column="order_id"/>
+            <result property="book_price" column="book_price"/>
+            <result property="book_name" column="book_name"/>
+            <result property="book_icon" column="book_icon"/>
+            <result property="ISBN" column="ISBN"/>
+            <result property="book_quantity" column="product_quantity"/>
+        </collection>
+    </resultMap>
+    <select id="searchOrder" parameterType="string" resultMap="searchOrder">
+        select master.*,detail.* from order_master master,order_detail detail where master.order_id=detail.order_id and master.buyer_name=#{name}
+    </select>
+
+    <insert id="createOrder" parameterType="com.shukai.ebook.bean.Order_Master">
+        insert into order_master(order_id,buyer_account,buyer_name,order_amount)
+        values(#{order_id},#{buyer_account},#{buyer_name},#{order_amount})
+    </insert>
+
+    <update id="updateOrderStatus" parameterType="com.shukai.ebook.bean.Order_Master">
+        update order_master set order_status=#{order_status},pay_status=#{pay_status} where order_id=#{order_id}
+    </update>
+
+    <!--订单详情 -->
+    <insert id="createOrderDetail" parameterType="com.shukai.ebook.bean.Order_Detail">
+        insert into order_detail(detail_id,order_id,ISBN,book_name,book_author,book_price,book_quantity,book_icon)
+        values(#{detail_id},#{order_id},#{ISBN},#{book_name},#{book_author},#{book_price},#{book_quantity},#{book_icon})
+    </insert>
+</mapper>
